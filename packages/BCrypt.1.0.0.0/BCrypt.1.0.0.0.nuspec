@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>BCrypt</id>
+    <version>1.0.0.0</version>
+    <title>BCrypt</title>
+    <authors>Fabian Vilers (Dev One)</authors>
+    <owners>Fabian Vilers (Dev One)</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>bcrypt is an encryption utility implementing the Blowfish cipher.</description>
+    <summary>bcrypt is an encryption utility implementing the Blowfish cipher.</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <references>
+      <reference file="DevOne.Security.Cryptography.BCrypt.dll" />
+    </references>
+  </metadata>
+</package>
