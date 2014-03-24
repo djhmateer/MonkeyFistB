@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MonkeyFist.DB;
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MonkeyFist.DB;
 
 namespace Specs {
-  public class TestBase :IDisposable {
+    public class TestBase : IDisposable {
 
-    public TestBase() {
-      new Session().Database.ExecuteSqlCommand("delete from useractivitylogs;delete from usermailermessages;delete from usersessions;delete from users");
-      //clear out emails
-      Directory.CreateDirectory(@"c:\temp\maildrop");
-      //clean out the mailers
-      foreach (FileInfo file in new DirectoryInfo(@"c:\temp\maildrop").GetFiles()) {
-        file.Delete();
-      }
+        public TestBase() {
+            // Clear out all database except UserMailerTemplates
+            new Session().Database.ExecuteSqlCommand("DELETE FROM useractivitylogs;DELETE FROM usermailermessages;DELETE FROM usersessions;DELETE FROM users");
+            Directory.CreateDirectory(@"c:\temp\maildrop");
+            // Clean out the mailers
+            foreach (FileInfo file in new DirectoryInfo(@"c:\temp\maildrop").GetFiles()) {
+                file.Delete();
+            }
+        }
+
+        public void Dispose() {
+            new Session().Database.ExecuteSqlCommand("DELETE FROM useractivitylogs;DELETE FROM usermailermessages;DELETE FROM usersessions;DELETE FROM users");
+        }
+
     }
-
-    public void Dispose() {
-      new Session().Database.ExecuteSqlCommand("delete from useractivitylogs;delete from usermailermessages;delete from usersessions;delete from users");
-    }
-
-  }
 }
