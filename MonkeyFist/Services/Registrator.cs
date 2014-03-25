@@ -11,21 +11,26 @@ namespace MonkeyFist.Services {
         public Guid SessionToken { get; set; }
         public bool Successful {
             get {
-                return this.Application == null ? false : this.Application.IsAccepted();
+                return Application != null && Application.IsAccepted();
             }
         }
     }
 
+    // Classes capitalised
     public class Registrator {
 
+        // Variable / Private Field (member of Registrator)
         Configuration _config;
 
+        // Method/Function names capitalised
         public Registrator(Configuration config = null) {
             // The ?? operator is the null-coalescing operator. 
             // It returns the left-hand operand if the operand is not null; otherwise it returns the right hand operand.
             _config = config ?? new Configuration();
         }
 
+        // Protected field - possibly better to use a Property public Application CurrentApplication {get; protected set;}
+        // ie can only be accessed by this class or derived class
         protected Application CurrentApplication;
 
         bool EmailOrPasswordNotPresent() {
@@ -34,7 +39,7 @@ namespace MonkeyFist.Services {
         }
 
         public virtual bool EmailAlreadyRegistered() {
-            var exists = false;
+            bool exists;
             using (var session = new Session()) {
                 exists = session.Users.FirstOrDefault(x => x.Email == CurrentApplication.Email) != null;
             }
@@ -61,11 +66,9 @@ namespace MonkeyFist.Services {
             return result;
         }
 
-
         public virtual string HashPassword() {
             return BCryptHelper.HashPassword(CurrentApplication.Password, BCryptHelper.GenerateSalt(10));
         }
-
 
         public virtual User CreateUserFromCurrentApplication() {
             return new User {
@@ -79,7 +82,7 @@ namespace MonkeyFist.Services {
 
         // Part 2
         public virtual User AcceptApplication() {
-            User user = null;
+            User user;
             using (var session = new Session()) {
                 //set the status
                 CurrentApplication.Status = ApplicationStatus.Accepted;
@@ -90,17 +93,17 @@ namespace MonkeyFist.Services {
                 //log the registration
                 user.AddLogEntry("Registration", "User with email " + user.Email + " successfully registered");
 
-                //send off an email
+                // Get the UserMailerTemplate
                 var mailer = session.Mailers.FirstOrDefault(x => x.MailerType == MailerType.EmailConfirmation);
                 if (mailer != null && _config.RequireEmailConfirmation) {
                     //TODO need to hook this up so the email can be confirmed
                     var message = UserMailerMessage.CreateFromTemplate(mailer, _config.ConfirmationUrl + "?t=" + user.AuthenticationToken);
                     message.SendTo(user);
+
+                    user.AddLogEntry("Registration", "Email confirmation request sent");
                 }
 
-                user.AddLogEntry("Registration", "Email confirmation request sent");
-
-                //save the user down
+                // Save the User (along with the Log entry and MailerLogs)
                 session.Users.Add(user);
                 session.SaveChanges();
             }

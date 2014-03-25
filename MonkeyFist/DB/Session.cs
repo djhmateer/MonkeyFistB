@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MonkeyFist.Models;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MonkeyFist.Models;
 
 namespace MonkeyFist.DB {
   public class Session :DbContext {
     
     public Session() : base(nameOrConnectionString:"MonkeyFist") {
-      //nice for development
-      Database.SetInitializer<Session>(new DropCreateDatabaseIfModelChanges<Session>());
+      // Nice for development
+      Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Session>());
     }
     public DbSet<User> Users { get; set; }
     public DbSet<UserActivityLog> ActivityLogs { get; set; }

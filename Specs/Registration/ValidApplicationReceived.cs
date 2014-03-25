@@ -11,7 +11,7 @@ namespace Specs.Registration {
         RegistrationResult _result;
         User _user;
 
-        public ValidApplicationReceived() : base() {
+        public ValidApplicationReceived() {
             _reg = new Registrator();
             var app = new Application(email: "rob@tekpub.com", password: "password", confirm: "password");
             _result = _reg.ApplyForMembership(app);
@@ -30,7 +30,6 @@ namespace Specs.Registration {
         public void User_Be_Added_To_System() {
             Assert.NotNull(_user);
         }
-
         [Fact(DisplayName = "User status set to Pending")]
         public void User_Status_Set_to_Pending() {
             Assert.Equal(UserStatus.Pending, _user.Status);
@@ -39,11 +38,9 @@ namespace Specs.Registration {
         public void Log_Entry_Is_Created_For_Event() {
             Assert.True(_result.NewUser.Logs.Count > 0);
         }
-
         [Fact(DisplayName = "A confirmation message is provided to show to the user")]
         public void A_Message_is_Provided_for_User() {
             Assert.Equal("Welcome!", _result.Application.UserMessage);
         }
-
     }
 }
